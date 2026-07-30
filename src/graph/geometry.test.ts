@@ -2,6 +2,10 @@ import { describe, expect, it } from 'vitest'
 import type { TimelineLayout } from './model'
 import {
   buildBranchPath,
+  contentHeight,
+  graphHeight,
+  LABEL_HEIGHT,
+  LABEL_MIN_GAP,
   LANE_WIDTH,
   laneX,
   MARGIN,
@@ -62,6 +66,28 @@ describe('resolveLabelYs', () => {
 
   it('handles unsorted input, keeping each label with its index', () => {
     expect(resolveLabelYs([100, 0, 10], 26)).toEqual([100, 0, 26])
+  })
+})
+
+describe('label stacking', () => {
+  it('separates labels by at least their own box height', () => {
+    expect(LABEL_MIN_GAP).toBeGreaterThanOrEqual(LABEL_HEIGHT)
+  })
+
+  it('never leaves two resolved labels overlapping', () => {
+    const coincident = [500, 500, 500, 500, 500]
+    const resolved = resolveLabelYs(coincident, LABEL_MIN_GAP)
+    const sorted = [...resolved].sort((a, b) => a - b)
+    for (let i = 1; i < sorted.length; i++) {
+      expect(sorted[i]! - sorted[i - 1]!).toBeGreaterThanOrEqual(LABEL_HEIGHT)
+    }
+  })
+
+  it('grows the canvas so the last stacked label is not clipped', () => {
+    const layout = { startMonth: '2023-08', months: 42 } as unknown as TimelineLayout
+    const pushedDown = graphHeight(layout) + 200
+    expect(contentHeight(layout, [100, pushedDown])).toBeGreaterThan(pushedDown)
+    expect(contentHeight(layout, [100, 200])).toBe(graphHeight(layout))
   })
 })
 

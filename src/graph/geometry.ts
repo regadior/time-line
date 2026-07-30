@@ -7,7 +7,9 @@ export const MONTH_HEIGHT = 24
 export const COMMIT_RADIUS = 6
 export const HEAD_RADIUS = 8
 export const CURVE_HEIGHT = 18
-export const LABEL_MIN_GAP = 26
+export const LABEL_HEIGHT = 34
+export const LABEL_MIN_GAP = LABEL_HEIGHT + 4
+export const GRID_OVERHANG = 26
 
 const round = (n: number): string => (Number.isInteger(n) ? String(n) : n.toFixed(2))
 
@@ -25,6 +27,15 @@ export function graphWidth(layout: TimelineLayout): number {
 
 export function graphHeight(layout: TimelineLayout): number {
   return monthY(layout.months) + MARGIN.bottom
+}
+
+export function contentHeight(
+  layout: TimelineLayout,
+  labelYs: readonly number[],
+): number {
+  if (labelYs.length === 0) return graphHeight(layout)
+  const lastLabelBottom = Math.max(...labelYs) + LABEL_HEIGHT / 2 + 16
+  return Math.max(graphHeight(layout), lastLabelBottom)
 }
 
 export interface BranchPathInput {

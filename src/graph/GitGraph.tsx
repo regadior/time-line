@@ -6,9 +6,11 @@ import { localize } from '@/lib/localize'
 import {
   buildBranchPath,
   COMMIT_RADIUS,
-  graphHeight,
+  contentHeight,
   graphWidth,
+  GRID_OVERHANG,
   HEAD_RADIUS,
+  LABEL_HEIGHT,
   LABEL_MIN_GAP,
   laneX,
   MARGIN,
@@ -63,18 +65,18 @@ function branchSubtitle(branch: LaidOutBranch, lang: Lang): string {
 
 export function GitGraph({ layout, selection, onSelect }: GitGraphProps) {
   const { t, lang } = useI18n()
-  const width = graphWidth(layout)
-  const height = graphHeight(layout)
   const ticks = yearTicks(layout)
   const selectedBranchId = selection?.branchId ?? null
 
-  const gridRight = laneX(layout.laneCount - 1) + LABEL_MIN_GAP
+  const gridRight = laneX(layout.laneCount - 1) + GRID_OVERHANG
   const labelX = laneX(layout.laneCount - 1) + 34
   const tips = layout.branches.map(tipPoint)
   const labelYs = resolveLabelYs(
     tips.map((t) => t.y),
     LABEL_MIN_GAP,
   )
+  const width = graphWidth(layout)
+  const height = contentHeight(layout, labelYs)
   const nowY = monthY(layout.nowOffset)
 
   return (
@@ -247,14 +249,14 @@ export function GitGraph({ layout, selection, onSelect }: GitGraphProps) {
               />
               <foreignObject
                 x={labelX}
-                y={labelY - 17}
+                y={labelY - LABEL_HEIGHT / 2}
                 width={MARGIN.right - 44}
-                height={36}
+                height={LABEL_HEIGHT}
               >
                 <button
                   type="button"
                   onClick={() => onSelect({ type: 'branch', branchId: branch.id })}
-                  className={`flex h-[34px] w-full items-center gap-2 rounded-md px-1.5 text-left transition-colors hover:bg-surface-hover ${
+                  className={`flex h-full w-full items-center gap-2 rounded-md px-1.5 text-left transition-colors hover:bg-surface-hover ${
                     selected ? 'bg-surface-hover' : ''
                   }`}
                 >
