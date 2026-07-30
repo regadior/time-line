@@ -5,7 +5,6 @@ import type { Lang } from './types'
 export interface I18nContextValue {
   lang: Lang
   setLang: (lang: Lang) => void
-  /** UI strings for the active language. */
   t: Dictionary
 }
 

@@ -9,16 +9,16 @@ vive en un único JSON validado.
 
 ## La metáfora
 
-| Concepto git            | En el timeline                                             |
-| ----------------------- | ---------------------------------------------------------- |
-| `main` / `develop`      | El troncal de tu trayectoria                               |
-| Branch (`plexus`)       | Una **empresa** — forkea al entrar, mergea al salir        |
-| Branch abierta (HEAD)   | **Empresa actual** (aún sin merge)                         |
-| Sub-branch              | Un **proyecto** dentro de la empresa                       |
-| Ramas en paralelo       | **Proyectos simultáneos** (carriles distintos)             |
-| Commit ●                | Un **hito / actividad** del proyecto                       |
-| Merge commit            | Proyecto **terminado**                                     |
-| Tag / badge             | **Tecnologías y herramientas**                             |
+| Concepto git          | En el timeline                                      |
+| --------------------- | --------------------------------------------------- |
+| `main` / `develop`    | El troncal de tu trayectoria                        |
+| Branch (`plexus`)     | Una **empresa** — forkea al entrar, mergea al salir |
+| Branch abierta (HEAD) | **Empresa actual** (aún sin merge)                  |
+| Sub-branch            | Un **proyecto** dentro de la empresa                |
+| Ramas en paralelo     | **Proyectos simultáneos** (carriles distintos)      |
+| Commit ●              | Un **hito / actividad** del proyecto                |
+| Merge commit          | Proyecto **terminado**                              |
+| Tag / badge           | **Tecnologías y herramientas**                      |
 
 ## Stack
 
@@ -84,31 +84,31 @@ Forma abreviada:
   "profile": {
     "name": "Tu Nombre",
     "role": "Backend Developer",
-    "defaultBranch": "main",        // "main" | "develop"
+    "defaultBranch": "main", // "main" | "develop"
     "email": "tu@correo.com",
-    "links": [{ "label": "GitHub", "url": "https://github.com/tu-usuario" }]
+    "links": [{ "label": "GitHub", "url": "https://github.com/tu-usuario" }],
   },
   "companies": [
     {
       "id": "empresa",
       "name": "Empresa",
-      "color": "#8250df",           // opcional, hex
-      "start": "2023-08",           // YYYY-MM
-      "end": null,                  // null = actual (rama abierta)
+      "color": "#8250df", // opcional, hex
+      "start": "2023-08", // YYYY-MM
+      "end": null, // null = actual (rama abierta)
       "projects": [
         {
           "id": "proyecto",
           "name": "Proyecto",
           "start": "2023-08",
-          "end": "2024-07",         // null = en curso
+          "end": "2024-07", // null = en curso
           "summary": { "es": "…", "en": "…" },
           "commits": [{ "es": "Hito 1", "en": "Milestone 1" }],
           "tech": ["NestJS", "PostgreSQL"],
-          "tools": ["VS Code", "DBeaver"]
-        }
-      ]
-    }
-  ]
+          "tools": ["VS Code", "DBeaver"],
+        },
+      ],
+    },
+  ],
 }
 ```
 

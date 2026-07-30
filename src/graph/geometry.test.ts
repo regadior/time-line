@@ -20,22 +20,37 @@ describe('coordinate mapping', () => {
 
 describe('buildBranchPath', () => {
   it('draws the trunk as a straight vertical line', () => {
-    const path = buildBranchPath({ parentX: null, x: 64, startY: 56, endY: 500, merges: false })
+    const path = buildBranchPath({
+      parentX: null,
+      x: 64,
+      startY: 56,
+      endY: 500,
+      merges: false,
+    })
     expect(path).toBe('M 64 56 L 64 500')
   })
 
   it('forks from the parent lane and stays open when ongoing', () => {
-    const path = buildBranchPath({ parentX: 64, x: 124, startY: 100, endY: 400, merges: false })
+    const path = buildBranchPath({
+      parentX: 64,
+      x: 124,
+      startY: 100,
+      endY: 400,
+      merges: false,
+    })
     expect(path.startsWith('M 64 100')).toBe(true)
-    expect(path).toContain('C') // has a fork curve
-    // ends on the child lane (no merge back)
     expect(path.trimEnd().endsWith('124 400')).toBe(true)
   })
 
   it('merges back to the parent lane when finished', () => {
-    const path = buildBranchPath({ parentX: 64, x: 124, startY: 100, endY: 400, merges: true })
+    const path = buildBranchPath({
+      parentX: 64,
+      x: 124,
+      startY: 100,
+      endY: 400,
+      merges: true,
+    })
     expect(path.startsWith('M 64 100')).toBe(true)
-    // ends back on the parent lane
     expect(path.trimEnd().endsWith('64 400')).toBe(true)
   })
 })

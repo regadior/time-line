@@ -3,24 +3,19 @@ import { COMPANY_COLOR, projectColor, TRUNK_COLOR } from '@/lib/colors'
 import { localize } from '@/lib/localize'
 import type { LaidOutBranch, LaidOutCommit, TimelineLayout } from './model'
 
-/** Minimum vertical room, in months, reserved per commit so dense/short
- *  projects still show their dots without overlapping. */
+// Vertical room reserved per commit so short projects still show every dot.
 const MIN_COMMIT_SPAN_MONTHS = 0.85
-/** Empty months kept below the newest activity for HEAD labels. */
 const BOTTOM_PADDING_MONTHS = 2
 
 export interface LayoutOptions {
-  /** "Today" — injected so the layout stays a pure function (easy to test). */
   now: Date
 }
 
-/** `YYYY-MM` → absolute month index (`year * 12 + month0`). */
 export function monthToAbs(month: string): number {
   const [year, month1] = month.split('-')
   return Number(year) * 12 + (Number(month1) - 1)
 }
 
-/** Absolute month index → `YYYY-MM`. */
 export function absToMonth(abs: number): string {
   const year = Math.floor(abs / 12)
   const month1 = (abs % 12) + 1
@@ -39,9 +34,8 @@ interface LaneItem {
 
 /**
  * Greedy lane packing. An interval reuses a lane only if it starts strictly
- * after the last interval on that lane ends — so abutting intervals (one ending
- * the month another begins) get separate lanes and a fork never collides with a
- * merge at the same point.
+ * after the last one on that lane ends, so abutting intervals get separate
+ * lanes and a fork never collides with a merge at the same point.
  */
 export function packLanes(items: readonly LaneItem[]): Map<string, number> {
   const ordered = [...items].sort((a, b) => a.start - b.start || a.end - b.end)
@@ -75,16 +69,15 @@ function distributeCommits(
   const span = end - start
   return messages.map((message, i) => ({
     id: `${projectId}:c${i}`,
-    t: start + ((i + 1) / (messages.length + 1)) * span,
+    monthOffset: start + ((i + 1) / (messages.length + 1)) * span,
     message,
   }))
 }
 
 /**
- * Turn the domain timeline into a laid-out git graph:
- *   trunk (lane 0) ← companies (lanes 1…) ← projects (lanes …),
- * with parallel projects packed into distinct lanes and each project's
- * activities distributed as commits along its branch.
+ * Turn the domain timeline into a laid-out git graph: trunk (lane 0) ←
+ * companies (lanes 1…) ← projects, with time-overlapping projects packed into
+ * distinct lanes and each project's activities distributed as commits.
  */
 export function computeTimelineLayout(
   timeline: Timeline,
@@ -93,7 +86,6 @@ export function computeTimelineLayout(
   const nowAbs = dateToAbs(options.now)
   const { companies } = timeline
 
-  // Global start = earliest company/project start.
   const starts: number[] = []
   for (const company of companies) {
     starts.push(monthToAbs(company.start))
@@ -101,12 +93,11 @@ export function computeTimelineLayout(
   }
   const startAbs = Math.min(...starts)
 
-  // Flatten projects in chronological order → stable colours + lane packing.
+  // Chronological order drives both the colour assignment and lane packing.
   const projectEntries = companies
     .flatMap((company) => company.projects.map((project) => ({ company, project })))
     .sort((a, b) => monthToAbs(a.project.start) - monthToAbs(b.project.start))
 
-  // Visual tip per project (absolute months), honouring the minimum commit span.
   const tipAbsById = new Map<string, number>()
   for (const { project } of projectEntries) {
     const startPos = monthToAbs(project.start)
@@ -115,11 +106,9 @@ export function computeTimelineLayout(
     tipAbsById.set(project.id, Math.max(rawTip, startPos + minSpan))
   }
 
-  const globalEndAbs =
-    Math.max(nowAbs, ...tipAbsById.values()) + BOTTOM_PADDING_MONTHS
+  const globalEndAbs = Math.max(nowAbs, ...tipAbsById.values()) + BOTTOM_PADDING_MONTHS
   const months = Math.ceil(globalEndAbs - startAbs)
 
-  // Lane assignment.
   const companyLaneOf = packLanes(
     companies.map((company) => ({
       id: company.id,
@@ -142,35 +131,32 @@ export function computeTimelineLayout(
   const trunkId = timeline.profile.defaultBranch
   const rel = (abs: number) => abs - startAbs
 
-  const branches: LaidOutBranch[] = []
+  const branches: LaidOutBranch[] = [
+    {
+      id: trunkId,
+      kind: 'trunk',
+      label: trunkId,
+      lane: 0,
+      color: TRUNK_COLOR,
+      startOffset: 0,
+      endOffset: rel(globalEndAbs),
+      ongoing: true,
+      parentId: null,
+      parentLane: null,
+      commits: [],
+      ref: { kind: 'trunk' },
+    },
+  ]
 
-  // Trunk.
-  branches.push({
-    id: trunkId,
-    kind: 'trunk',
-    label: trunkId,
-    lane: 0,
-    color: TRUNK_COLOR,
-    start: 0,
-    end: rel(globalEndAbs),
-    ongoing: true,
-    parentId: null,
-    parentLane: null,
-    commits: [],
-    ref: { kind: 'trunk' },
-  })
-
-  // Companies.
   for (const company of companies) {
-    const lane = companyLaneBase + (companyLaneOf.get(company.id) ?? 0)
     branches.push({
       id: `company:${company.id}`,
       kind: 'company',
       label: company.name,
-      lane,
+      lane: companyLaneBase + (companyLaneOf.get(company.id) ?? 0),
       color: COMPANY_COLOR,
-      start: rel(monthToAbs(company.start)),
-      end: rel(company.end ? monthToAbs(company.end) : globalEndAbs),
+      startOffset: rel(monthToAbs(company.start)),
+      endOffset: rel(company.end ? monthToAbs(company.end) : globalEndAbs),
       ongoing: company.end === null,
       parentId: trunkId,
       parentLane: 0,
@@ -179,24 +165,21 @@ export function computeTimelineLayout(
     })
   }
 
-  // Projects.
   projectEntries.forEach(({ company, project }, index) => {
-    const lane = projectLaneBase + (projectLaneOf.get(project.id) ?? 0)
-    const parentLane = companyLaneBase + (companyLaneOf.get(company.id) ?? 0)
-    const start = rel(monthToAbs(project.start))
-    const end = rel(tipAbsById.get(project.id) ?? monthToAbs(project.start))
+    const startOffset = rel(monthToAbs(project.start))
+    const endOffset = rel(tipAbsById.get(project.id) ?? monthToAbs(project.start))
     branches.push({
       id: `project:${project.id}`,
       kind: 'project',
       label: localize(project.name, 'es'),
-      lane,
+      lane: projectLaneBase + (projectLaneOf.get(project.id) ?? 0),
       color: projectColor(index),
-      start,
-      end,
+      startOffset,
+      endOffset,
       ongoing: project.end === null,
       parentId: `company:${company.id}`,
-      parentLane,
-      commits: distributeCommits(project.id, project.commits, start, end),
+      parentLane: companyLaneBase + (companyLaneOf.get(company.id) ?? 0),
+      commits: distributeCommits(project.id, project.commits, startOffset, endOffset),
       ref: { kind: 'project', company, project },
     })
   })
@@ -207,7 +190,7 @@ export function computeTimelineLayout(
     months,
     startMonth: absToMonth(startAbs),
     endMonth: absToMonth(startAbs + months),
-    nowT: rel(nowAbs),
+    nowOffset: rel(nowAbs),
     trunkId,
     defaultBranch: timeline.profile.defaultBranch,
   }

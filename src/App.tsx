@@ -10,7 +10,11 @@ import { useI18n } from '@/i18n/context'
 import { LanguageProvider } from '@/i18n/LanguageProvider'
 
 function Centered({ children }: { children: React.ReactNode }) {
-  return <div className="grid min-h-dvh place-items-center p-6 text-sm text-muted">{children}</div>
+  return (
+    <div className="grid min-h-dvh place-items-center p-6 text-sm text-muted">
+      {children}
+    </div>
+  )
 }
 
 function ErrorScreen({ error }: { error: Error }) {
@@ -23,7 +27,8 @@ function ErrorScreen({ error }: { error: Error }) {
           {error.message}
         </pre>
         <p className="text-xs">
-          {t.app.errorHintPrefix} <code className="text-accent">public/data/timeline.json</code>.
+          {t.app.errorHintPrefix}{' '}
+          <code className="text-accent">public/data/timeline.json</code>.
         </p>
       </div>
     </Centered>

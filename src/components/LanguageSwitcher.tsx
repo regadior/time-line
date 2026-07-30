@@ -1,7 +1,6 @@
 import { useI18n } from '@/i18n/context'
 import { LANGS } from '@/i18n/types'
 
-/** Compact ES · EN segmented control. */
 export function LanguageSwitcher() {
   const { lang, setLang, t } = useI18n()
   return (

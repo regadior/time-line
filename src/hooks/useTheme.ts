@@ -11,7 +11,6 @@ function getInitialTheme(): Theme {
   return prefersDark ? 'dark' : 'light'
 }
 
-/** Light/dark theme, persisted to localStorage and applied as `.dark` on <html>. */
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>(getInitialTheme)
 

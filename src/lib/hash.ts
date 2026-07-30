@@ -1,4 +1,3 @@
-/** Deterministic 7-char hex "commit hash" from a string (djb2). Cosmetic only. */
 export function shortHash(input: string): string {
   let hash = 5381
   for (let i = 0; i < input.length; i++) {

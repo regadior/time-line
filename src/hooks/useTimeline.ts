@@ -7,7 +7,6 @@ export type TimelineState =
   | { status: 'error'; error: Error }
   | { status: 'ready'; data: Timeline }
 
-/** Load and validate the timeline JSON once on mount. */
 export function useTimeline(): TimelineState {
   const [state, setState] = useState<TimelineState>({ status: 'loading' })
 

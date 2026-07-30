@@ -17,7 +17,6 @@ function makeTimeline(): Timeline {
         projects: [
           { id: 'a', name: 'A', start: '2020-01', end: '2020-06', commits: ['x', 'y'] },
           { id: 'b', name: 'B', start: '2020-06', end: '2021-01', commits: ['z'] },
-          // Overlaps both A and B on the time axis.
           { id: 'c', name: 'C', start: '2020-03', end: '2020-09', commits: [] },
         ],
       },
@@ -86,17 +85,15 @@ describe('computeTimelineLayout', () => {
   it('distributes commits in time order, strictly inside the branch span', () => {
     const a = layout.branches.find((b) => b.id === 'project:a')
     expect(a?.commits).toHaveLength(2)
-    expect(a!.commits[0]!.t).toBeLessThan(a!.commits[1]!.t)
+    expect(a!.commits[0]!.monthOffset).toBeLessThan(a!.commits[1]!.monthOffset)
     for (const commit of a!.commits) {
-      expect(commit.t).toBeGreaterThan(a!.start)
-      expect(commit.t).toBeLessThan(a!.end)
+      expect(commit.monthOffset).toBeGreaterThan(a!.startOffset)
+      expect(commit.monthOffset).toBeLessThan(a!.endOffset)
     }
   })
 
   it('gives every project a distinct, stable colour', () => {
-    const colors = layout.branches
-      .filter((b) => b.kind === 'project')
-      .map((b) => b.color)
+    const colors = layout.branches.filter((b) => b.kind === 'project').map((b) => b.color)
     expect(new Set(colors).size).toBe(colors.length)
   })
 })

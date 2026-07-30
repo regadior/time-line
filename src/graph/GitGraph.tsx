@@ -33,11 +33,10 @@ function activateOnKey(handler: () => void) {
   }
 }
 
-/** Where a branch's tip node sits: on its own lane if open, on the parent lane if merged. */
 function tipPoint(branch: LaidOutBranch): { x: number; y: number } {
   const onOwnLane = branch.ongoing || branch.parentLane === null
   const lane = onOwnLane ? branch.lane : branch.parentLane
-  return { x: laneX(lane ?? branch.lane), y: monthY(branch.end) }
+  return { x: laneX(lane ?? branch.lane), y: monthY(branch.endOffset) }
 }
 
 function branchTitle(branch: LaidOutBranch, lang: Lang): string {
@@ -76,7 +75,7 @@ export function GitGraph({ layout, selection, onSelect }: GitGraphProps) {
     tips.map((t) => t.y),
     LABEL_MIN_GAP,
   )
-  const nowY = monthY(layout.nowT)
+  const nowY = monthY(layout.nowOffset)
 
   return (
     <div className="h-full w-full overflow-auto">
@@ -88,7 +87,6 @@ export function GitGraph({ layout, selection, onSelect }: GitGraphProps) {
         aria-label={`${t.graph.ariaLabel} · ${layout.trunkId}`}
         className="block"
       >
-        {/* Year gridlines */}
         <g aria-hidden="true">
           {ticks.map((tick) => (
             <g key={tick.year} className="text-muted">
@@ -112,7 +110,6 @@ export function GitGraph({ layout, selection, onSelect }: GitGraphProps) {
               </text>
             </g>
           ))}
-          {/* "Hoy" marker */}
           <line
             x1={MARGIN.left - 8}
             x2={gridRight}
@@ -134,15 +131,14 @@ export function GitGraph({ layout, selection, onSelect }: GitGraphProps) {
           </text>
         </g>
 
-        {/* Branch lines + tip nodes */}
         {layout.branches.map((branch) => {
           const dim = selectedBranchId !== null && branch.id !== selectedBranchId
           const parentX = branch.parentLane === null ? null : laneX(branch.parentLane)
           const path = buildBranchPath({
             parentX,
             x: laneX(branch.lane),
-            startY: monthY(branch.start),
-            endY: monthY(branch.end),
+            startY: monthY(branch.startOffset),
+            endY: monthY(branch.endOffset),
             merges: !branch.ongoing && branch.parentLane !== null,
           })
           const tip = tipPoint(branch)
@@ -157,7 +153,6 @@ export function GitGraph({ layout, selection, onSelect }: GitGraphProps) {
                 strokeWidth={isCompany ? 3.25 : isTrunk ? 2.75 : 2.25}
                 strokeLinecap="round"
               />
-              {/* Fat invisible hit target to select the branch */}
               <path
                 className="branch-hit graph-node outline-none"
                 d={path}
@@ -174,7 +169,6 @@ export function GitGraph({ layout, selection, onSelect }: GitGraphProps) {
               >
                 <title>{branchTitle(branch, lang)}</title>
               </path>
-              {/* Tip node: filled HEAD for open branches, small merge dot otherwise */}
               {branch.ongoing || isTrunk ? (
                 <circle
                   cx={tip.x}
@@ -191,7 +185,6 @@ export function GitGraph({ layout, selection, onSelect }: GitGraphProps) {
           )
         })}
 
-        {/* Commit dots */}
         {layout.branches.map((branch) => {
           const dim = selectedBranchId !== null && branch.id !== selectedBranchId
           return (
@@ -226,7 +219,7 @@ export function GitGraph({ layout, selection, onSelect }: GitGraphProps) {
                     <circle
                       className="commit-dot"
                       cx={laneX(branch.lane)}
-                      cy={monthY(commit.t)}
+                      cy={monthY(commit.monthOffset)}
                       r={active ? COMMIT_RADIUS + 2 : COMMIT_RADIUS}
                       fill={active ? 'currentColor' : 'var(--canvas)'}
                       stroke="currentColor"
@@ -239,10 +232,9 @@ export function GitGraph({ layout, selection, onSelect }: GitGraphProps) {
           )
         })}
 
-        {/* Right-gutter branch labels with leader lines + collision avoidance */}
         {layout.branches.map((branch, i) => {
           const dim = selectedBranchId !== null && branch.id !== selectedBranchId
-          const tip = tips[i] ?? { x: labelX, y: monthY(branch.end) }
+          const tip = tips[i] ?? { x: labelX, y: monthY(branch.endOffset) }
           const labelY = labelYs[i] ?? tip.y
           const selected = branch.id === selectedBranchId
           return (

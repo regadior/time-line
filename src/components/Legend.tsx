@@ -7,14 +7,28 @@ interface LegendItem {
   hint: string
 }
 
-/** Compact explainer of the git metaphor. */
 export function Legend({ trunkName }: { trunkName: string }) {
   const { t } = useI18n()
   const items: LegendItem[] = [
     { swatch: 'line', color: 'var(--trunk)', label: trunkName, hint: t.legend.trunkHint },
-    { swatch: 'line', color: 'var(--accent)', label: t.legend.company, hint: t.legend.companyHint },
-    { swatch: 'line', color: 'var(--branch-1)', label: t.legend.project, hint: t.legend.projectHint },
-    { swatch: 'dot', color: 'var(--branch-1)', label: t.legend.commit, hint: t.legend.commitHint },
+    {
+      swatch: 'line',
+      color: 'var(--accent)',
+      label: t.legend.company,
+      hint: t.legend.companyHint,
+    },
+    {
+      swatch: 'line',
+      color: 'var(--branch-1)',
+      label: t.legend.project,
+      hint: t.legend.projectHint,
+    },
+    {
+      swatch: 'dot',
+      color: 'var(--branch-1)',
+      label: t.legend.commit,
+      hint: t.legend.commitHint,
+    },
   ]
   return (
     <ul className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs">
