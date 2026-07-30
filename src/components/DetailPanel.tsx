@@ -5,6 +5,7 @@ import { useI18n } from '@/i18n/context'
 import { durationLabel, formatRange, monthsBetween } from '@/lib/dates'
 import { shortHash } from '@/lib/hash'
 import { localize } from '@/lib/localize'
+import { OverviewStats } from './OverviewStats'
 import { TechBadge } from './TechBadge'
 
 interface DetailPanelProps {
@@ -31,14 +32,18 @@ function uniqueTech(projects: readonly Project[]): string[] {
 
 function Eyebrow({ children }: { children: ReactNode }) {
   return (
-    <p className="text-[11px] font-semibold uppercase tracking-wider text-muted">{children}</p>
+    <p className="text-[11px] font-semibold uppercase tracking-wider text-muted">
+      {children}
+    </p>
   )
 }
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="border-t border-border pt-4">
-      <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted">{title}</h3>
+      <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted">
+        {title}
+      </h3>
       {children}
     </section>
   )
@@ -50,7 +55,9 @@ function DateLine({ start, end, now }: { start: string; end: string | null; now:
     <p className="mt-1 flex flex-wrap items-center gap-x-2 text-sm text-muted">
       <span>{formatRange(start, end, lang)}</span>
       <span aria-hidden="true">·</span>
-      <span className="tabular-nums">{durationLabel(monthsBetween(start, end, now), lang)}</span>
+      <span className="tabular-nums">
+        {durationLabel(monthsBetween(start, end, now), lang)}
+      </span>
       {end === null && (
         <span className="rounded-full bg-success/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-success">
           {t.panel.active}
@@ -69,19 +76,8 @@ function Overview({
   now: Date
   onSelect: (s: Selection | null) => void
 }) {
-  const { lang, t } = useI18n()
+  const { t } = useI18n()
   const { profile } = timeline
-  const projects = timeline.companies.flatMap((c) => c.projects)
-  const techCount = new Set(projects.flatMap((p) => p.tech)).size
-  const firstStart = [...timeline.companies.map((c) => c.start)].sort()[0] ?? '—'
-  const spanMonths = monthsBetween(firstStart, null, now)
-
-  const stats: { value: string; label: string }[] = [
-    { value: String(timeline.companies.length), label: t.stats.companies },
-    { value: String(projects.length), label: t.stats.projects },
-    { value: String(techCount), label: t.stats.technologies },
-    { value: durationLabel(spanMonths, lang), label: t.stats.experience },
-  ]
 
   return (
     <div className="space-y-5">
@@ -91,36 +87,7 @@ function Overview({
         {profile.role && <p className="text-sm text-muted">{profile.role}</p>}
       </div>
 
-      <div className="grid grid-cols-2 gap-2">
-        {stats.map((stat) => (
-          <div key={stat.label} className="rounded-lg border border-border bg-surface px-3 py-2.5">
-            <div className="text-lg font-semibold tabular-nums">{stat.value}</div>
-            <div className="text-xs text-muted">{stat.label}</div>
-          </div>
-        ))}
-      </div>
-
-      <Section title={t.panel.companies}>
-        <ul className="space-y-1">
-          {timeline.companies.map((company) => (
-            <li key={company.id}>
-              <button
-                type="button"
-                onClick={() => onSelect({ type: 'branch', branchId: `company:${company.id}` })}
-                className="flex w-full items-center justify-between gap-2 rounded-md px-2 py-1.5 text-left transition-colors hover:bg-surface-hover"
-              >
-                <span className="flex items-center gap-2">
-                  <span className="size-2.5 rounded-full bg-accent" aria-hidden="true" />
-                  <span className="text-sm font-medium">{company.name}</span>
-                </span>
-                <span className="text-xs text-muted">
-                  {formatRange(company.start, company.end, lang)}
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      </Section>
+      <OverviewStats timeline={timeline} now={now} onSelect={onSelect} />
 
       <p className="rounded-lg border border-dashed border-border px-3 py-2.5 text-xs text-muted">
         {t.panel.overviewHint}
@@ -161,7 +128,9 @@ function CompanyDetail({
             <li key={project.id}>
               <button
                 type="button"
-                onClick={() => onSelect({ type: 'branch', branchId: `project:${project.id}` })}
+                onClick={() =>
+                  onSelect({ type: 'branch', branchId: `project:${project.id}` })
+                }
                 className="w-full rounded-md px-2 py-1.5 text-left transition-colors hover:bg-surface-hover"
               >
                 <span className="block truncate text-sm font-medium">
@@ -206,11 +175,16 @@ function ProjectDetail({
       <div>
         <Eyebrow>
           <span className="inline-flex items-center gap-1.5">
-            <span className="size-2 rounded-full" style={{ backgroundColor: branch.color }} />
+            <span
+              className="size-2 rounded-full"
+              style={{ backgroundColor: branch.color }}
+            />
             {t.panel.branchProject}
           </span>
         </Eyebrow>
-        <h2 className="mt-1 text-lg font-semibold leading-snug">{localize(project.name, lang)}</h2>
+        <h2 className="mt-1 text-lg font-semibold leading-snug">
+          {localize(project.name, lang)}
+        </h2>
         <button
           type="button"
           onClick={() => onSelect({ type: 'branch', branchId: `company:${company.id}` })}
@@ -243,7 +217,9 @@ function ProjectDetail({
                     <code className="mt-0.5 shrink-0 text-[11px] text-muted">
                       {shortHash(commitId)}
                     </code>
-                    <span className="text-sm leading-snug">{localize(message, lang)}</span>
+                    <span className="text-sm leading-snug">
+                      {localize(message, lang)}
+                    </span>
                   </button>
                 </li>
               )
@@ -332,7 +308,13 @@ function CommitDetail({
   )
 }
 
-export function DetailPanel({ layout, timeline, selection, now, onSelect }: DetailPanelProps) {
+export function DetailPanel({
+  layout,
+  timeline,
+  selection,
+  now,
+  onSelect,
+}: DetailPanelProps) {
   const { lang, t } = useI18n()
   const branch = selection
     ? layout.branches.find((b) => b.id === selection.branchId)
@@ -343,7 +325,12 @@ export function DetailPanel({ layout, timeline, selection, now, onSelect }: Deta
     body = <Overview timeline={timeline} now={now} onSelect={onSelect} />
   } else if (branch.ref.kind === 'company') {
     body = (
-      <CompanyDetail company={branch.ref.company} color={branch.color} now={now} onSelect={onSelect} />
+      <CompanyDetail
+        company={branch.ref.company}
+        color={branch.color}
+        now={now}
+        onSelect={onSelect}
+      />
     )
   } else if (selection.type === 'commit') {
     const index = Number(selection.commitId.split(':c')[1] ?? 0)
@@ -386,7 +373,14 @@ export function DetailPanel({ layout, timeline, selection, now, onSelect }: Deta
             aria-label={t.panel.close}
             className="inline-flex size-7 items-center justify-center rounded-md text-muted transition-colors hover:bg-surface-hover hover:text-fg"
           >
-            <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+            <svg
+              viewBox="0 0 24 24"
+              className="size-4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              strokeLinecap="round"
+            >
               <path d="M6 6l12 12M18 6L6 18" />
             </svg>
           </button>

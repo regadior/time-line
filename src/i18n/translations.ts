@@ -1,9 +1,7 @@
 import type { Lang } from './types'
 
-/**
- * UI string dictionary. `es` is the canonical shape; `en` is typed as
- * `Dictionary`, so the compiler flags any missing or extra key.
- */
+// `es` is the canonical shape; `en` is typed as `Dictionary`, so the compiler
+// flags any missing or extra key.
 const es = {
   app: {
     loading: 'Cargando timeline…',
@@ -46,6 +44,7 @@ const es = {
     company: 'Empresa',
     project: 'Proyecto',
     period: 'Periodo',
+    since: 'desde',
     active: 'activo',
     commitWord: 'commit',
   },
@@ -103,6 +102,7 @@ const en: Dictionary = {
     company: 'Company',
     project: 'Project',
     period: 'Period',
+    since: 'since',
     active: 'active',
     commitWord: 'commit',
   },

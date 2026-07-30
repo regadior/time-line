@@ -1,4 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
 import timeline from '../public/data/timeline.json'
@@ -34,7 +35,26 @@ describe('<App />', () => {
   it('shows the git-graph with its trunk label', async () => {
     render(<App />)
     await waitFor(() => expect(screen.getByRole('img')).toBeInTheDocument())
-    // The trunk (main) branch label appears in the right gutter.
     expect(screen.getAllByText('main').length).toBeGreaterThan(0)
+  })
+
+  it('expands a stat tile into the list of its items', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await waitFor(() =>
+      expect(
+        screen.getByRole('heading', { level: 1, name: /Rodrigo Regad/ }),
+      ).toBeInTheDocument(),
+    )
+
+    const techTile = screen.getByRole('button', { name: /technolog|tecnolog/i })
+    expect(techTile).toHaveAttribute('aria-expanded', 'false')
+
+    await user.click(techTile)
+    expect(techTile).toHaveAttribute('aria-expanded', 'true')
+    expect(screen.getByText('Strapi')).toBeInTheDocument()
+
+    await user.click(techTile)
+    expect(techTile).toHaveAttribute('aria-expanded', 'false')
   })
 })
