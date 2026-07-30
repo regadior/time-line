@@ -1,0 +1,281 @@
+{
+  "profile": {
+    "name": "Rodrigo Regadío Núñez",
+    "role": "Backend Developer",
+    "tagline": {
+      "es": "git log --graph --all de mi carrera",
+      "en": "git log --graph --all of my career"
+    },
+    "email": "rodrigo.regadionunez@plexus.es",
+    "defaultBranch": "main",
+    "links": [{ "label": "GitHub", "url": "https://github.com/regadior" }]
+  },
+  "companies": [
+    {
+      "id": "plexus",
+      "name": "Plexus",
+      "role": "Backend Developer",
+      "color": "#8250df",
+      "start": "2023-08",
+      "end": null,
+      "projects": [
+        {
+          "id": "formacion",
+          "name": { "es": "Proyecto de formación", "en": "Training project" },
+          "summary": {
+            "es": "Onboarding y formación inicial en la empresa.",
+            "en": "Onboarding and initial training at the company."
+          },
+          "start": "2023-08",
+          "end": "2023-09",
+          "commits": [
+            {
+              "es": "Participación en distintos proyectos internos de formación y adaptación.",
+              "en": "Took part in several internal training and onboarding projects."
+            }
+          ],
+          "tech": [],
+          "tools": []
+        },
+        {
+          "id": "talento-plexus",
+          "name": {
+            "es": "Talento Plexus — gestión de personal",
+            "en": "Talento Plexus — staff management"
+          },
+          "role": "Backend Developer",
+          "summary": {
+            "es": "Aplicación interna de gestión de personal: contratación, asignación y gestión de proyectos y recursos.",
+            "en": "Internal staff-management app: hiring, allocation and management of projects and resources."
+          },
+          "start": "2023-09",
+          "end": "2024-07",
+          "commits": [
+            {
+              "es": "Desarrollo del backend de una aplicación interna de gestión de personal (contratación, asignación y gestión de proyectos y recursos).",
+              "en": "Built the backend of an internal staff-management app (hiring, allocation and management of projects and resources)."
+            },
+            {
+              "es": "Trabajo en equipo siguiendo metodologías Agile/Scrum.",
+              "en": "Teamwork following Agile/Scrum methodologies."
+            },
+            {
+              "es": "Diseño e implementación de APIs REST.",
+              "en": "Design and implementation of REST APIs."
+            },
+            {
+              "es": "Diseño de base de datos relacional.",
+              "en": "Relational database design."
+            },
+            {
+              "es": "Testing funcional y despliegue en distintos entornos.",
+              "en": "Functional testing and deployment across environments."
+            }
+          ],
+          "tech": [
+            "NestJS",
+            "TypeScript",
+            "Docker",
+            "PostgreSQL",
+            "Azure",
+            "Swagger",
+            "Jest",
+            "Git",
+            "GitFlow"
+          ],
+          "tools": ["VS Code", "DBeaver", "Postman", "Trello"]
+        },
+        {
+          "id": "rafa-nadal-academy",
+          "name": {
+            "es": "Rafa Nadal Academy — App Web",
+            "en": "Rafa Nadal Academy — Web App"
+          },
+          "role": "Full-stack Developer",
+          "summary": {
+            "es": "Desarrollo y mantenimiento de una aplicación web.",
+            "en": "Development and maintenance of a web application."
+          },
+          "start": "2024-08",
+          "end": "2025-09",
+          "commits": [
+            {
+              "es": "Desarrollo y mantenimiento de funcionalidades backend y frontend.",
+              "en": "Development and maintenance of backend and frontend features."
+            },
+            {
+              "es": "Gestión e integración de bases de datos relacionales.",
+              "en": "Management and integration of relational databases."
+            },
+            {
+              "es": "Mejoras de frontend y desarrollo de componentes con React.",
+              "en": "Frontend improvements and component development with React."
+            }
+          ],
+          "tech": ["Node.js", "Strapi", "MySQL", "React", "Git"],
+          "tools": []
+        },
+        {
+          "id": "mobt",
+          "name": "MoBT",
+          "role": "Backend Developer",
+          "summary": {
+            "es": "Servicios backend escalables con arquitectura hexagonal.",
+            "en": "Scalable backend services with hexagonal architecture."
+          },
+          "start": "2025-09",
+          "end": null,
+          "commits": [
+            {
+              "es": "Desarrollo y mantenimiento de servicios backend escalables con NestJS, aplicando arquitectura hexagonal.",
+              "en": "Development and maintenance of scalable backend services with NestJS, applying hexagonal architecture."
+            },
+            {
+              "es": "Persistencia en base de datos no relacional (DynamoDB).",
+              "en": "Persistence in a NoSQL database (DynamoDB)."
+            },
+            {
+              "es": "Uso de GitFlow y documentación técnica en Confluence.",
+              "en": "GitFlow and technical documentation in Confluence."
+            },
+            {
+              "es": "Dinámicas Agile/Scrum: dailies, sprints y reuniones de seguimiento técnico.",
+              "en": "Agile/Scrum ceremonies: dailies, sprints and technical follow-up meetings."
+            }
+          ],
+          "tech": ["NestJS", "DynamoDB", "Git", "GitFlow", "Confluence"],
+          "tools": []
+        },
+        {
+          "id": "urbaser",
+          "name": "Urbaser — Java & Spring Boot",
+          "role": "Backend Developer",
+          "summary": {
+            "es": "Nuevas funcionalidades con Java y Spring Boot en entornos cloud.",
+            "en": "New features with Java and Spring Boot in cloud environments."
+          },
+          "start": "2025-12",
+          "end": "2026-02",
+          "commits": [
+            {
+              "es": "Desarrollo de nuevas funcionalidades usando Java y Spring Boot.",
+              "en": "Development of new features using Java and Spring Boot."
+            },
+            {
+              "es": "Gestión de dependencias con Gradle.",
+              "en": "Dependency management with Gradle."
+            },
+            {
+              "es": "Colaboración en entornos cloud mediante servicios de Azure.",
+              "en": "Collaboration in cloud environments using Azure services."
+            }
+          ],
+          "tech": ["Java", "Spring Boot", "Gradle", "Azure"],
+          "tools": []
+        },
+        {
+          "id": "rm-api",
+          "name": {
+            "es": "Restaurant Manager multi-marca (Homeria)",
+            "en": "Multi-brand Restaurant Manager (Homeria)"
+          },
+          "role": "Backend Developer",
+          "summary": {
+            "es": "Backend de Restaurant Manager, plataforma multi-marca (Burger King, Popeyes): pedidos, tickets, repartidores, incidencias, dispatcher y compensaciones.",
+            "en": "Restaurant Manager backend, a multi-brand platform (Burger King, Popeyes): orders, tickets, couriers, incidents, dispatcher and compensations."
+          },
+          "start": "2026-06",
+          "end": null,
+          "commits": [
+            {
+              "es": "Funcionalidades del backend multi-marca: pedidos, tickets, repartidores, incidencias, dispatcher y compensaciones.",
+              "en": "Multi-brand backend features: orders, tickets, couriers, incidents, dispatcher and compensations."
+            },
+            {
+              "es": "Node.js/Express con TypeScript, arquitectura en capas y persistencia con Sequelize sobre PostgreSQL (esquemas/conexiones/zona horaria por marca).",
+              "en": "Node.js/Express with TypeScript, layered architecture and persistence with Sequelize over PostgreSQL (schemas/connections/timezone per brand)."
+            },
+            {
+              "es": "Integración con sistemas externos.",
+              "en": "Integration with external systems."
+            },
+            {
+              "es": "Testing unitario (Jest) e integración/e2e con Testcontainers/Docker contra PostgreSQL real.",
+              "en": "Unit testing (Jest) and integration/e2e with Testcontainers/Docker against a real PostgreSQL."
+            },
+            {
+              "es": "Agile/Scrum, GitFlow y documentación en Confluence/Jira; IA (Claude Code) para generación/refactor de código, testing y verificación end-to-end.",
+              "en": "Agile/Scrum, GitFlow and documentation in Confluence/Jira; AI (Claude Code) for code generation/refactoring, testing and end-to-end verification."
+            }
+          ],
+          "tech": [
+            "Node.js",
+            "Express",
+            "TypeScript",
+            "Sequelize",
+            "PostgreSQL",
+            "AWS",
+            "Docker",
+            "Testcontainers",
+            "Jest",
+            "Kibana",
+            "Git",
+            "GitFlow"
+          ],
+          "tools": ["VS Code", "DBeaver", "Postman", "Confluence", "Jira"]
+        },
+        {
+          "id": "global-api",
+          "name": {
+            "es": "Global API — pedidos e incidencias (Homeria)",
+            "en": "Global API — orders & incidents (Homeria)"
+          },
+          "role": "Backend Developer",
+          "summary": {
+            "es": "API global multi-marca de pedidos, incidencias y tickets con arquitectura hexagonal.",
+            "en": "Global multi-brand API for orders, incidents and tickets with hexagonal architecture."
+          },
+          "start": "2026-07",
+          "end": null,
+          "commits": [
+            {
+              "es": "API global multi-marca (pedidos, incidencias y tickets) con arquitectura hexagonal (puertos y adaptadores) sobre NestJS; REST documentado con Swagger/OpenAPI.",
+              "en": "Global multi-brand API (orders, incidents and tickets) with hexagonal architecture (ports and adapters) on NestJS; REST documented with Swagger/OpenAPI."
+            },
+            {
+              "es": "Persistencia en PostgreSQL con TypeORM (múltiples esquemas/conexiones por marca) y programación reactiva con RxJS.",
+              "en": "Persistence in PostgreSQL with TypeORM (multiple schemas/connections per brand) and reactive programming with RxJS."
+            },
+            {
+              "es": "Integración con API externa para el reenvío de incidencias, autenticando las peticiones mediante firma HMAC.",
+              "en": "Integration with an external API to forward incidents, authenticating requests via HMAC signature."
+            },
+            {
+              "es": "Testing en tres niveles: unitario (Jest, jest-marbles), integración y e2e con Testcontainers/Docker contra PostgreSQL real.",
+              "en": "Three-level testing: unit (Jest, jest-marbles), integration and e2e with Testcontainers/Docker against a real PostgreSQL."
+            },
+            {
+              "es": "Agile/Scrum, GitFlow y documentación en Confluence; IA (Claude Code) para generación/refactor de código, testing y resolución de conflictos.",
+              "en": "Agile/Scrum, GitFlow and documentation in Confluence; AI (Claude Code) for code generation/refactoring, testing and conflict resolution."
+            }
+          ],
+          "tech": [
+            "NestJS",
+            "TypeScript",
+            "RxJS",
+            "TypeORM",
+            "PostgreSQL",
+            "Fastify",
+            "Docker",
+            "Testcontainers",
+            "Jest",
+            "Swagger",
+            "Git",
+            "GitFlow"
+          ],
+          "tools": ["VS Code", "DBeaver", "Postman", "Confluence", "Jira"]
+        }
+      ]
+    }
+  ]
+}

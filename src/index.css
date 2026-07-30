@@ -1,0 +1,111 @@
+@import 'tailwindcss';
+
+/* Class-based dark mode so a manual toggle can override the OS preference. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Semantic tokens — GitHub-inspired palette, swapped per theme. */
+:root {
+  --canvas: #ffffff;
+  --surface: #f6f8fa;
+  --surface-hover: #eaeef2;
+  --border: #d0d7de;
+  --fg: #1f2328;
+  --muted: #656d76;
+  --accent: #8250df;
+  --accent-fg: #ffffff;
+  --success: #1a7f37;
+  --shadow: 0 1px 3px rgb(31 35 40 / 0.12), 0 8px 24px rgb(66 74 83 / 0.12);
+
+  /* Trunk + validated categorical palette for branches (light steps). */
+  --trunk: #57606a;
+  --branch-1: #2a78d6;
+  --branch-2: #eb6834;
+  --branch-3: #1baf7a;
+  --branch-4: #eda100;
+  --branch-5: #e87ba4;
+  --branch-6: #008300;
+  --branch-7: #4a3aa7;
+  --branch-8: #e34948;
+}
+
+.dark {
+  --canvas: #0d1117;
+  --surface: #161b22;
+  --surface-hover: #21262d;
+  --border: #30363d;
+  --fg: #e6edf3;
+  --muted: #8b949e;
+  --accent: #a371f7;
+  --accent-fg: #ffffff;
+  --success: #3fb950;
+  --shadow: 0 0 0 1px rgb(0 0 0 / 0.2), 0 16px 32px rgb(1 4 9 / 0.85);
+
+  /* Trunk + validated categorical palette for branches (dark steps). */
+  --trunk: #7d8590;
+  --branch-1: #3987e5;
+  --branch-2: #d95926;
+  --branch-3: #199e70;
+  --branch-4: #c98500;
+  --branch-5: #d55181;
+  --branch-6: #008300;
+  --branch-7: #9085e9;
+  --branch-8: #e66767;
+}
+
+/* Expose tokens as Tailwind theme values (inline => they react to .dark). */
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-border: var(--border);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-success: var(--success);
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas,
+    'Liberation Mono', monospace;
+}
+
+html {
+  color-scheme: light dark;
+}
+
+body {
+  @apply bg-canvas text-fg font-mono antialiased;
+  margin: 0;
+  min-height: 100dvh;
+}
+
+/* Graph interaction niceties. */
+.commit-dot {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 120ms ease;
+}
+.commit-dot:hover {
+  transform: scale(1.35);
+}
+.branch-hit {
+  cursor: pointer;
+}
+.graph-node:focus-visible {
+  outline: none;
+}
+.graph-node:focus-visible circle,
+.graph-node:focus-visible rect {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 9999px;
+}
+
+/* Respect users who prefer less motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
