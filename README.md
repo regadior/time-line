@@ -62,7 +62,9 @@ Configuración inicial (una sola vez):
 
 1. **Settings → Pages → Build and deployment → Source: _GitHub Actions_**
 2. **Settings → Pages → Custom domain:** `timeline.regadior.dev` → _Save_
-3. DNS del dominio: registro **CNAME** de `timeline` → `regadior.github.io`
+3. DNS (Cloudflare): registro **CNAME** de `timeline` → `regadior.github.io`,
+   con **proxy desactivado** (_DNS only_, nube gris). Con el proxy activo GitHub
+   no puede emitir el certificado.
 4. Cuando GitHub valide el DNS y emita el certificado, marcar **Enforce HTTPS**
 
 El dominio vive en [`public/CNAME`](public/CNAME), así que viaja con el
