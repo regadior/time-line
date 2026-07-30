@@ -1,5 +1,6 @@
 # Deploys the built site to GitHub Pages.
-# Requires: Settings → Pages → "Build and deployment" → Source = "GitHub Actions".
+# `configure-pages` with `enablement: true` turns Pages on automatically on the
+# first run; alternatively enable it in Settings → Pages → Source = "GitHub Actions".
 name: Deploy to GitHub Pages
 
 on:
@@ -29,6 +30,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
