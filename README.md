@@ -53,6 +53,21 @@ pnpm format       # prettier --write
 pnpm typecheck    # tsc -b
 ```
 
+## Despliegue
+
+Se publica en **https://timeline.regadior.dev** mediante GitHub Actions
+(`.github/workflows/deploy.yml`) en cada push a `main`.
+
+Configuración inicial (una sola vez):
+
+1. **Settings → Pages → Build and deployment → Source: _GitHub Actions_**
+2. **Settings → Pages → Custom domain:** `timeline.regadior.dev` → _Save_
+3. DNS del dominio: registro **CNAME** de `timeline` → `regadior.github.io`
+4. Cuando GitHub valide el DNS y emita el certificado, marcar **Enforce HTTPS**
+
+El dominio vive en [`public/CNAME`](public/CNAME), así que viaja con el
+artefacto en cada despliegue.
+
 ## Editar tu timeline
 
 Los datos están en [`public/data/timeline.json`](public/data/timeline.json) y
