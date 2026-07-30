@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { DetailPanel } from '@/components/DetailPanel'
 import { Legend } from '@/components/Legend'
 import { ProfileHeader } from '@/components/ProfileHeader'
@@ -8,6 +8,7 @@ import type { Selection } from '@/graph/model'
 import { useTimeline } from '@/hooks/useTimeline'
 import { useI18n } from '@/i18n/context'
 import { LanguageProvider } from '@/i18n/LanguageProvider'
+import { parseUrlState, toSearch, validateSelection } from '@/lib/urlState'
 
 function Centered({ children }: { children: React.ReactNode }) {
   return (
@@ -36,14 +37,22 @@ function ErrorScreen({ error }: { error: Error }) {
 }
 
 function AppInner() {
-  const { t } = useI18n()
+  const { t, lang } = useI18n()
   const state = useTimeline()
   const now = useMemo(() => new Date(), [])
-  const [selection, setSelection] = useState<Selection | null>(null)
+  const [requested, setRequested] = useState<Selection | null>(
+    () => parseUrlState(window.location.search).selection,
+  )
   const layout = useMemo(
     () => (state.status === 'ready' ? computeTimelineLayout(state.data, { now }) : null),
     [state, now],
   )
+  const selection = layout ? validateSelection(layout.branches, requested) : requested
+
+  useEffect(() => {
+    const url = `${window.location.pathname}${toSearch(selection, lang)}`
+    window.history.replaceState(null, '', url)
+  }, [selection, lang])
 
   if (state.status === 'loading') return <Centered>{t.app.loading}</Centered>
   if (state.status === 'error') return <ErrorScreen error={state.error} />
@@ -58,7 +67,7 @@ function AppInner() {
             <Legend trunkName={layout.trunkId} />
           </div>
           <div className="min-h-0 flex-1 bg-canvas">
-            <GitGraph layout={layout} selection={selection} onSelect={setSelection} />
+            <GitGraph layout={layout} selection={selection} onSelect={setRequested} />
           </div>
         </main>
         <div className="flex h-[42dvh] w-full shrink-0 flex-col border-t border-border bg-canvas lg:h-full lg:w-[380px] lg:border-l lg:border-t-0">
@@ -67,7 +76,7 @@ function AppInner() {
             timeline={state.data}
             selection={selection}
             now={now}
-            onSelect={setSelection}
+            onSelect={setRequested}
           />
         </div>
       </div>

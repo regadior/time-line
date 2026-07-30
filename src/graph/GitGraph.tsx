@@ -1,4 +1,4 @@
-import type { KeyboardEvent } from 'react'
+import { useEffect, useRef, type KeyboardEvent } from 'react'
 import { useI18n } from '@/i18n/context'
 import type { Lang } from '@/i18n/types'
 import { formatRange } from '@/lib/dates'
@@ -78,6 +78,11 @@ export function GitGraph({ layout, selection, onSelect }: GitGraphProps) {
   const width = graphWidth(layout)
   const height = contentHeight(layout, labelYs)
   const nowY = monthY(layout.nowOffset)
+
+  const focusRef = useRef<SVGGElement | null>(null)
+  useEffect(() => {
+    focusRef.current?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' })
+  }, [selection])
 
   return (
     <div className="h-full w-full overflow-auto">
@@ -197,6 +202,7 @@ export function GitGraph({ layout, selection, onSelect }: GitGraphProps) {
                 return (
                   <g
                     key={commit.id}
+                    ref={active ? focusRef : undefined}
                     className="graph-node outline-none"
                     role="button"
                     tabIndex={0}
@@ -240,7 +246,11 @@ export function GitGraph({ layout, selection, onSelect }: GitGraphProps) {
           const labelY = labelYs[i] ?? tip.y
           const selected = branch.id === selectedBranchId
           return (
-            <g key={`${branch.id}-label`} style={{ opacity: dim ? 0.35 : 1 }}>
+            <g
+              key={`${branch.id}-label`}
+              ref={selected && selection?.type === 'branch' ? focusRef : undefined}
+              style={{ opacity: dim ? 0.35 : 1 }}
+            >
               <path
                 d={`M ${tip.x} ${tip.y} L ${labelX - 6} ${labelY}`}
                 fill="none"

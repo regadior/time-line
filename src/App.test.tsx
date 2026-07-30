@@ -19,6 +19,7 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.unstubAllGlobals()
+  window.history.replaceState(null, '', '/')
 })
 
 describe('<App />', () => {
@@ -36,6 +37,41 @@ describe('<App />', () => {
     render(<App />)
     await waitFor(() => expect(screen.getByRole('img')).toBeInTheDocument())
     expect(screen.getAllByText('main').length).toBeGreaterThan(0)
+  })
+
+  it('opens the project named in the URL and pins the shared language', async () => {
+    window.history.replaceState(null, '', '/?project=global-api&lang=es')
+    render(<App />)
+    await waitFor(() =>
+      expect(
+        screen.getByRole('heading', { level: 2, name: /Global API — pedidos/ }),
+      ).toBeInTheDocument(),
+    )
+  })
+
+  it('writes the selection back to the URL when something is picked', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await waitFor(() =>
+      expect(
+        screen.getByRole('heading', { level: 1, name: /Rodrigo Regad/ }),
+      ).toBeInTheDocument(),
+    )
+
+    const [plexusRow] = screen.getAllByRole('button', { name: /^Plexus/ })
+    await user.click(plexusRow!)
+    expect(window.location.search).toContain('company=plexus')
+  })
+
+  it('ignores a link that points at something that no longer exists', async () => {
+    window.history.replaceState(null, '', '/?project=deleted-project')
+    render(<App />)
+    await waitFor(() =>
+      expect(
+        screen.getByRole('heading', { level: 1, name: /Rodrigo Regad/ }),
+      ).toBeInTheDocument(),
+    )
+    expect(window.location.search).not.toContain('deleted-project')
   })
 
   it('expands a stat tile into the list of its items', async () => {
